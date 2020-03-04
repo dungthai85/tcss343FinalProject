@@ -33,12 +33,12 @@ public class MyMain {
 //			OutputText(randMatrix(200), 200);
 //            OutputText(randMatrix(400), 400);
 //            OutputText(randMatrix(800), 800);
-			// Save the timer
+			// Start the timer
 			long timer = System.currentTimeMillis();
 			// Change Test File Name HERE!!
-			String testFileInput = "test25.txt";
+			String testFileInput = "sample_input.txt";
 			// Change the n X n HERE ALSO!!
-			int n = 25;
+			int n = 4;
 			// Buffered reader to read in the file
 			BufferedReader rentalCosts = Files.newBufferedReader(Paths.get(testFileInput));
 			// Making the int array for the problem
@@ -47,9 +47,7 @@ public class MyMain {
 			// For loop to put all the values into the array
 			int m = 0;
 			while (tempString != null) {
-//				fullRentalArray.append(tempString).append(System.lineSeparator());
 				String[] tempparse = tempString.split("	");
-//				System.out.println(tempparse[0]);
 				for(int j = 0; j < n; j++) {
 					arr[m][j] = tempparse[j];
 				}
@@ -63,14 +61,11 @@ public class MyMain {
 				}
 				System.out.println();
 			}
-
-//			double byteFileSize = byteFile.length() / 1024;
-//			double originalFileSize = new File(nonCompressedFileName).length() / 1024;
+			// The calls to each of the methods
+			
+			// End the timer for the method.
 			long endtimer = System.currentTimeMillis();
 			long totaltime = endtimer - timer;
-//			System.out.println("Original File Size: " + originalFileSize + " kb");
-//			System.out.println("Compressed File Size: " + byteFileSize + " kb");
-//			System.out.println("Compression Ratio: " + byteFileSize/originalFileSize*100 +"%");
 			System.out.println("Running time: " + totaltime/1000 + " seconds");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -84,32 +79,32 @@ public class MyMain {
         Random number = new Random();
         String[][] arr = new String[size][size];
         // For loops to generate random incrementing values
-//        for(int i = 0; i < size; i++) {
-//        	int n = 3;
-//        	int randomNumber = number.nextInt(n) + 1;
-//            for(int j = 0; j < size; j++) {
-//                if( i > j ) {
-//                    arr[i][j] = "NA";
-//                } else if(i == j){
-//                    arr[i][j] = Integer.toString(0);
-//                } else{
-//                	arr[i][j] = Integer.toString(number.nextInt(n) + Integer.parseInt(arr[i][j-1]));
-//                }
-//                n = n + 1;
-//            }
-//        }
-//         For loops to generate random values
         for(int i = 0; i < size; i++) {
+        	int n = 2;
+        	int randomNumber = number.nextInt(n) + 1;
             for(int j = 0; j < size; j++) {
                 if( i > j ) {
                     arr[i][j] = "NA";
-                }else if(i == j){
+                } else if(i == j){
                     arr[i][j] = Integer.toString(0);
-                }else{
-                    arr[i][j] = Integer.toString(number.nextInt(size) + 1);
+                } else{
+                	arr[i][j] = Integer.toString(number.nextInt(n) + Integer.parseInt(arr[i][j-1]) + 1);
                 }
+                n = n + 1;
             }
         }
+//         For loops to generate random values
+//        for(int i = 0; i < size; i++) {
+//            for(int j = 0; j < size; j++) {
+//                if( i > j ) {
+//                    arr[i][j] = "NA";
+//                }else if(i == j){
+//                    arr[i][j] = Integer.toString(0);
+//                }else{
+//                    arr[i][j] = Integer.toString(number.nextInt(size) + 1);
+//                }
+//            }
+//        }
         return arr;
     }
     
