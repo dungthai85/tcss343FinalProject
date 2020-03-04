@@ -84,6 +84,21 @@ public class MyMain {
         Random number = new Random();
         String[][] arr = new String[size][size];
         // For loops to generate random incrementing values
+//        for(int i = 0; i < size; i++) {
+//        	int n = 3;
+//        	int randomNumber = number.nextInt(n) + 1;
+//            for(int j = 0; j < size; j++) {
+//                if( i > j ) {
+//                    arr[i][j] = "NA";
+//                } else if(i == j){
+//                    arr[i][j] = Integer.toString(0);
+//                } else{
+//                	arr[i][j] = Integer.toString(number.nextInt(n) + Integer.parseInt(arr[i][j-1]));
+//                }
+//                n = n + 1;
+//            }
+//        }
+//         For loops to generate random values
         for(int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++) {
                 if( i > j ) {
@@ -91,31 +106,18 @@ public class MyMain {
                 }else if(i == j){
                     arr[i][j] = Integer.toString(0);
                 }else{
-                	if (i == 0) {
-                		arr[i][j] = Integer.toString(number.nextInt(20) + 1);
-                	}
-                    arr[i][j] = Integer.toString(number.nextInt(20) + 1);
+                    arr[i][j] = Integer.toString(number.nextInt(size) + 1);
                 }
             }
         }
-        // For loops to generate random values
-//        for(int i = 0; i < size; i++) {
-//            for(int j = 0; j < size; j++) {
-//                if( i > j ) {
-//                    arr[i][j] = "NA";
-//                }else if(i == j){
-//                    arr[i][j] = Integer.toString(0);
-//                }else{
-//                    arr[i][j] = Integer.toString(number.nextInt(20) + 1);
-//                }
-//            }
-//        }
         return arr;
     }
     
     // Test method to output the array input to text.
     private static void OutputText(String[][] arr, int size) throws IOException {
-		File outputFile = new File("test" + Integer.toString(size) + ".txt");
+    	//Filenames
+		File outputFile = new File("testpseudo" + Integer.toString(size) + ".txt");
+//		File outputFile = new File("test" + Integer.toString(size) + ".txt");
 		PrintStream matrixOutput = new PrintStream(outputFile);
         int n = arr.length;
         int m = arr[0].length;
