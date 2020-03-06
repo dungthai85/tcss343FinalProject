@@ -97,6 +97,9 @@ public class MyMain {
 			endtimer = System.currentTimeMillis();
 			totaltime = endtimer - timer;
 			System.out.println("Running time: " + totaltime/1000 + " seconds");
+			dynamicProgramming(arr);
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -231,20 +234,41 @@ public class MyMain {
 			// Recurse the costArr with the first half and then add it with the second half
 			for(int temp = row+1; temp < post; temp++) {
 				int recurseCost = divideAndConquer(costArr, row, temp) + divideAndConquer(costArr, temp, post);
-				// if the minimum value is less than the cheap, switch the values
+				// if the minimum value is less than the cheap, replace the values, then add to sequence.
 				if(recurseCost < cheapestCost) {
 					cheapestCost = recurseCost;
 					dncSequence.add(post - 1);
 				} 
 			}
-		}		
+		}
+		//This adds the last post to the sequence list.
 		dncSequence.add(costArr.length);
 		return cheapestCost;	
 	}
 	
 	// This method is the Dynamic Programming solution to solve the problem.
-	public static void dynamicProgramming(String[][] arr) {
-		
+	public static int dynamicProgramming(String[][] costArr) {
+		int[] b = new int[costArr.length];
+		int[] sequence = new int[costArr.length];
+		for (int i = 1; i < costArr.length; i++) {
+			b[i] = Integer.MAX_VALUE;
+			for (int j = i - 1; j >= 0; j--) {
+				int current =  Integer.parseInt(costArr[j][i]) + b[j];
+				if (current <= b[i]) {
+					sequence[i] = j;
+				} 
+				b[i] = Math.min(current, b[i]);
+			}
+		}
+		System.out.print("\n" + "Dynamic Programming total minimum cost: " + b[costArr.length - 1]);
+		System.out.print("\n" + "Sequence of the minimum path: ");
+		for (int i = 0; i < sequence.length; i++) {
+			if(sequence[i] > 0) {
+				System.out.print(sequence[i] + " ");
+			}
+		}
+		System.out.print(costArr.length + " ");
+		return b[costArr.length - 1];
 		
 	}
 
