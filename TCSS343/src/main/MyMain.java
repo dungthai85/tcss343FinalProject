@@ -6,9 +6,11 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 
@@ -33,7 +35,7 @@ public class MyMain {
 		// A try and catch to be able to run and read the text file
 		try {
 			// This is Was used to originally generate our test files
-//          OutputText(randMatrix(6), 6);
+//          OutputText(randMatrix(10), 10);
 //            OutputText(randMatrix(25), 25);
 //            OutputText(randMatrix(50), 50);
 //            OutputText(randMatrix(100), 100);
@@ -43,9 +45,9 @@ public class MyMain {
 			
 
 			// Change Test File Name HERE!!
-			String testFileInput = "testpseudo6.txt";
+			String testFileInput = "testpseudo50.txt";
 			// Change the n X n HERE ALSO!!
-			int n = 6;
+			int n = 50;
 			// Buffered reader to read in the file
 			BufferedReader rentalCosts = Files.newBufferedReader(Paths.get(testFileInput));
 			// Making the int array for the problem
@@ -75,7 +77,7 @@ public class MyMain {
 			// To Call the Brute Force Method
 			// Start the timer
 			long timer = System.currentTimeMillis();
-			bruteForce(arr);
+//			bruteForce(arr);
 			// End the timer for the method.
 			long endtimer = System.currentTimeMillis(); 
 			long totaltime = endtimer - timer;
@@ -83,21 +85,26 @@ public class MyMain {
 			
 			// To call the divide and conquer method
 			// Start the timer
+//			timer = System.currentTimeMillis();
+//			dncSequence = new HashSet<>();
+//			System.out.println("\n" + "Divide and Conquer total minimum cost: " + divideAndConquer(arr, 0, arr.length-1));
+//			System.out.print("Sequence of the minimum path: ");
+//			//Traversing to print out the solution
+//			Iterator<Integer> itr = dncSequence.iterator();
+//			while(itr.hasNext()){ 
+//				System.out.print(itr.next() + " "); 
+//				}
+//			System.out.println();
+//			// End the timer for the method.
+//			endtimer = System.currentTimeMillis();
+//			totaltime = endtimer - timer;
+//			System.out.println("Running time: " + totaltime/1000 + " seconds");
 			timer = System.currentTimeMillis();
-			dncSequence = new HashSet<>();
-			System.out.println("\n" + "Divide and Conquer total minimum cost: " + divideAndConquer(arr, 0, arr.length-1));
-			System.out.print("Sequence of the minimum path: ");
-			//Traversing to print out the solution
-			Iterator<Integer> itr = dncSequence.iterator();
-			while(itr.hasNext()){ 
-				System.out.print(itr.next() + " "); 
-				}
-			System.out.println();
-			// End the timer for the method.
-			endtimer = System.currentTimeMillis();
-			totaltime = endtimer - timer;
-			System.out.println("Running time: " + totaltime/1000 + " seconds");
 			dynamicProgramming(arr);
+			// End the timer for the method.
+			endtimer = System.currentTimeMillis(); 
+			totaltime = endtimer - timer;
+			System.out.println("\nRunning time: " + totaltime/1000 + " seconds");
 			
 			
 		} catch (IOException e) {
@@ -233,11 +240,18 @@ public class MyMain {
 		else {
 			// Recurse the costArr with the first half and then add it with the second half
 			for(int temp = row+1; temp < post; temp++) {
+				int left = divideAndConquer(costArr, row, temp);
+				int right = divideAndConquer(costArr, temp, post);
+				if (left > right && left < cheapestCost) {
+					dncSequence.add(post-1);
+				} else {
+					dncSequence.add(row);
+				}
 				int recurseCost = divideAndConquer(costArr, row, temp) + divideAndConquer(costArr, temp, post);
 				// if the minimum value is less than the cheap, replace the values, then add to sequence.
 				if(recurseCost < cheapestCost) {
 					cheapestCost = recurseCost;
-					dncSequence.add(post - 1);
+//					dncSequence.add(post -1);
 				} 
 			}
 		}
@@ -248,27 +262,45 @@ public class MyMain {
 	
 	// This method is the Dynamic Programming solution to solve the problem.
 	public static int dynamicProgramming(String[][] costArr) {
-		int[] b = new int[costArr.length];
-		int[] sequence = new int[costArr.length];
-		for (int i = 1; i < costArr.length; i++) {
-			b[i] = Integer.MAX_VALUE;
-			for (int j = i - 1; j >= 0; j--) {
-				int current =  Integer.parseInt(costArr[j][i]) + b[j];
-				if (current <= b[i]) {
-					sequence[i] = j;
-				} 
-				b[i] = Math.min(current, b[i]);
+		// Initializing the size of the array
+		int size = costArr.length;
+		// Initializing an array to store the cheapest rentals stops
+		int[] minCost = new int[size];
+		// Initializing the array to store the posts that contain the minimum value;
+		int[] savedposts = new int[size];
+		// Initializing the array to store the sequence.
+		List<Integer> sequence = new ArrayList<>();
+		// First loop to go through the row
+		for (int i = 0; i < size; i++) {
+			// Setting the currentMin to the post for comparison 
+			int currentMin = Integer.parseInt(costArr[0][i]);
+			int currentpost = 0;
+			for (int j = 0; j < i; j++) {
+				if(minCost[j] + Integer.parseInt(costArr[j][i]) < currentMin) {
+					currentMin = minCost[j] + Integer.parseInt(costArr[j][i]);
+					currentpost =  j;
+				}
+			}
+			savedposts[i] = currentpost;
+			minCost[i] = currentMin;
+		}
+		
+		// To recover the solution
+		int currentpost = size -1;
+		for(int i = 0; i < savedposts.length -1; i++) {
+			if(!sequence.contains(currentpost+1)) {
+				sequence.add(currentpost+1);
+				currentpost = savedposts[currentpost];
 			}
 		}
-		System.out.print("\n" + "Dynamic Programming total minimum cost: " + b[costArr.length - 1]);
+		Collections.sort(sequence);
+		System.out.print("\n" + "Dynamic Programming total minimum cost: " + minCost[size - 1]);
 		System.out.print("\n" + "Sequence of the minimum path: ");
-		for (int i = 0; i < sequence.length; i++) {
-			if(sequence[i] > 0) {
-				System.out.print(sequence[i] + " ");
-			}
-		}
-		System.out.print(costArr.length + " ");
-		return b[costArr.length - 1];
+		// To print out the sequence we go through and print out the items in the array
+		for (int i = 0; i < sequence.size(); i++) {
+		System.out.print(sequence.get(i) + " ");
+	}
+		return minCost[size - 1];
 		
 	}
 
