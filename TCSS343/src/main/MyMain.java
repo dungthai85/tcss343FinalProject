@@ -35,19 +35,21 @@ public class MyMain {
 		// A try and catch to be able to run and read the text file
 		try {
 			// This is Was used to originally generate our test files
-//          OutputText(randMatrix(10), 10);
-//            OutputText(randMatrix(25), 25);
-//            OutputText(randMatrix(50), 50);
-//            OutputText(randMatrix(100), 100);
-//			OutputText(randMatrix(200), 200);
-//            OutputText(randMatrix(400), 400);
-//            OutputText(randMatrix(800), 800);
+			// Change test from to "test" or "testpseudo"
+//			String test = "testpseudo";
+//          OutputText(randMatrix(20, test), 20, test);
+//            OutputText(randMatrix(25, test), 25, test);
+//            OutputText(randMatrix(50, test), 50, test);
+//            OutputText(randMatrix(100, test), 100, test);
+//			OutputText(randMatrix(200, test), 200, test);
+//            OutputText(randMatrix(400, test), 400, test);
+//            OutputText(randMatrix(800, test), 800, test);
 			
 
 			// Change Test File Name HERE!!
-			String testFileInput = "testpseudo50.txt";
+			String testFileInput = "testpseudo10.txt";
 			// Change the n X n HERE ALSO!!
-			int n = 50;
+			int n = 10;
 			// Buffered reader to read in the file
 			BufferedReader rentalCosts = Files.newBufferedReader(Paths.get(testFileInput));
 			// Making the int array for the problem
@@ -77,34 +79,40 @@ public class MyMain {
 			// To Call the Brute Force Method
 			// Start the timer
 			long timer = System.currentTimeMillis();
-//			bruteForce(arr);
+			bruteForce(arr);
 			// End the timer for the method.
 			long endtimer = System.currentTimeMillis(); 
 			long totaltime = endtimer - timer;
 			System.out.println("Running time: " + totaltime/1000 + " seconds");
 			
-			// To call the divide and conquer method
-			// Start the timer
-//			timer = System.currentTimeMillis();
-//			dncSequence = new HashSet<>();
-//			System.out.println("\n" + "Divide and Conquer total minimum cost: " + divideAndConquer(arr, 0, arr.length-1));
-//			System.out.print("Sequence of the minimum path: ");
-//			//Traversing to print out the solution
-//			Iterator<Integer> itr = dncSequence.iterator();
-//			while(itr.hasNext()){ 
-//				System.out.print(itr.next() + " "); 
-//				}
-//			System.out.println();
-//			// End the timer for the method.
-//			endtimer = System.currentTimeMillis();
-//			totaltime = endtimer - timer;
-//			System.out.println("Running time: " + totaltime/1000 + " seconds");
+			
+			//Start Dynamic Programming
 			timer = System.currentTimeMillis();
 			dynamicProgramming(arr);
 			// End the timer for the method.
 			endtimer = System.currentTimeMillis(); 
 			totaltime = endtimer - timer;
 			System.out.println("\nRunning time: " + totaltime/1000 + " seconds");
+			
+			
+			// To call the divide and conquer method
+			// Start the timer
+			timer = System.currentTimeMillis();
+			dncSequence = new HashSet<>();
+			System.out.println("\n" + "Divide and Conquer total minimum cost: " + divideAndConquer(arr, 0, arr.length-1));
+//			//DIVIDE AND CONQUOR ATTEMPT TO RECOVER FAILED.
+			//System.out.print("Sequence of the minimum path: ");
+//			//Traversing to print out the solution
+//			Iterator<Integer> itr = dncSequence.iterator();
+//			while(itr.hasNext()){ 
+//				System.out.print(itr.next() + " "); 
+//				}
+			System.out.println();
+			// End the timer for the method.
+			endtimer = System.currentTimeMillis();
+			totaltime = endtimer - timer;
+			System.out.println("Running time: " + totaltime/1000 + " seconds");
+			
 			
 			
 		} catch (IOException e) {
@@ -115,42 +123,45 @@ public class MyMain {
 	}
 	
 	// Test method to create a random matrix with values from 1 to 10 
-    public static String[][] randMatrix(int size) {
+    public static String[][] randMatrix(int size, String test) {
         Random number = new Random();
         String[][] arr = new String[size][size];
+        if(test.contentEquals("testpseudo")){
         // For loops to generate random incrementing values
-        for(int i = 0; i < size; i++) {
-        	int n = 2;
-            for(int j = 0; j < size; j++) {
-                if( i > j ) {
-                    arr[i][j] = "NA";
-                } else if(i == j){
-                    arr[i][j] = Integer.toString(0);
-                } else{
-                	arr[i][j] = Integer.toString(number.nextInt(n) + Integer.parseInt(arr[i][j-1]) + 1);
-                }
-                n = n + 1;
-            }
+        	for(int i = 0; i < size; i++) {
+        		int n = 2;
+        		for(int j = 0; j < size; j++) {
+        			if( i > j ) {
+        				arr[i][j] = "NA";
+        			} else if(i == j){
+        				arr[i][j] = Integer.toString(0);
+        			} else{
+        				arr[i][j] = Integer.toString(number.nextInt(n) + Integer.parseInt(arr[i][j-1]) + 1);
+        			}
+        			n = n + 1;
+        		}
+        	}
+        } else {
+//        	For loops to generate random values
+        	for(int i = 0; i < size; i++) {
+        		for(int j = 0; j < size; j++) {
+        			if( i > j ) {
+        				arr[i][j] = "NA";
+        			} else if(i == j){
+        				arr[i][j] = Integer.toString(0);
+        			} else{
+        				arr[i][j] = Integer.toString(number.nextInt(size) + 1);
+        			}
+        		}
+        	}
         }
-//         For loops to generate random values
-//        for(int i = 0; i < size; i++) {
-//            for(int j = 0; j < size; j++) {
-//                if( i > j ) {
-//                    arr[i][j] = "NA";
-//                } else if(i == j){
-//                    arr[i][j] = Integer.toString(0);
-//                } else{
-//                    arr[i][j] = Integer.toString(number.nextInt(size) + 1);
-//                }
-//            }
-//        }
         return arr;
     }
     
     // Test method to output the array input to text.
-    private static void OutputText(String[][] arr, int size) throws IOException {
+    private static void OutputText(String[][] arr, int size, String test) throws IOException {
     	//Filenames
-		File outputFile = new File("testpseudo" + Integer.toString(size) + ".txt");
+		File outputFile = new File(test + Integer.toString(size) + ".txt");
 //		File outputFile = new File("test" + Integer.toString(size) + ".txt");
 		PrintStream matrixOutput = new PrintStream(outputFile);
         int n = arr.length;
@@ -240,13 +251,14 @@ public class MyMain {
 		else {
 			// Recurse the costArr with the first half and then add it with the second half
 			for(int temp = row+1; temp < post; temp++) {
-				int left = divideAndConquer(costArr, row, temp);
-				int right = divideAndConquer(costArr, temp, post);
-				if (left > right && left < cheapestCost) {
-					dncSequence.add(post-1);
-				} else {
-					dncSequence.add(row);
-				}
+				// ATTEMPT TO RECOVER FOR DNC FAILED
+//				int left = divideAndConquer(costArr, row, temp);
+//				int right = divideAndConquer(costArr, temp, post);
+//				if (left > right && left < cheapestCost) {
+//					dncSequence.add(post-1);
+//				} else {
+//					dncSequence.add(row);
+//				}
 				int recurseCost = divideAndConquer(costArr, row, temp) + divideAndConquer(costArr, temp, post);
 				// if the minimum value is less than the cheap, replace the values, then add to sequence.
 				if(recurseCost < cheapestCost) {
@@ -255,8 +267,8 @@ public class MyMain {
 				} 
 			}
 		}
-		//This adds the last post to the sequence list.
-		dncSequence.add(costArr.length);
+//		//This adds the last post to the sequence list.
+//		dncSequence.add(costArr.length);
 		return cheapestCost;	
 	}
 	
@@ -303,5 +315,35 @@ public class MyMain {
 		return minCost[size - 1];
 		
 	}
+//	public static int dynamicProgramming(String[][] costArr) {
+//		// Initializing the size of the array
+//		int size = costArr.length;
+//		// Initializing an array to store the cheapest rentals stops
+//		int[][] minCost = new int[size][size];
+//		// Fill it in with zeroes
+//		for (int i = 0; i < size; i++) {
+//			for (int j = 0; j < size; j++) {
+//				minCost[i][j] = 0;
+//			}
+//		}
+//		// Initializing the array to store the sequence.
+//		List<Integer> sequence = new ArrayList<>();
+//		// First loop to go through the row
+//		for (int i = 1; i < size; i++) {
+//			for (int j = 0; j < size - i; j++) {
+//				minCost[j][j+i] = Math.min(minCost[j][j+1] + minCost[j+1][j+i], minCost[j][j+i]);
+//				sequence.add(i);
+//			}
+//		}
+//		
+//		// To recover the solution
+//		Collections.sort(sequence);
+//		for(int i = 0; i < sequence.size(); i++) {
+//			System.out.print(sequence.get(i) + " ");
+//		}
+//		System.out.println(minCost[size - 1][0]);
+//		return minCost[size - 1][0];
+//		
+//	}
 
 }
